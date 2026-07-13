@@ -1,0 +1,7 @@
+.storage-option {
+  cursor: pointer;
+}
+
+#confidenceBar {
+  transition: width 0.4s ease;
+}

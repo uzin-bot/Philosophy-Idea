@@ -1,66 +1,156 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Philosophy-Idea</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Avomatic — 아보카도 숙성도 판별</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          avocado: {
+            50: '#f2f7e9', 100: '#e0ecc9', 200: '#c8dd9d',
+            300: '#a8c968', 400: '#8bb542', 500: '#6f9a2e',
+            600: '#557a22', 700: '#425f1c', 800: '#364c1a', 900: '#2f4118'
+          }
+        }
+      }
+    }
+  }
+</script>
+<link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
-  <header class="hero">
-    <p class="eyebrow">Philosophy-Idea</p>
-    <h1>철학에 대해 사색하자</h1>
-    <p class="subtitle">시대를 초월한 철학자들의 사유를 만나보세요.</p>
-  </header>
+<body class="bg-avocado-50 min-h-screen text-avocado-900 antialiased">
 
-  <main>
-    <section class="philosophers" id="philosophers">
-      <article class="card">
-        <h2>소크라테스</h2>
-        <p class="era">B.C. 470 &ndash; B.C. 399, 고대 그리스</p>
-        <p class="quote">"나는 내가 아무것도 모른다는 것을 안다."</p>
-        <p class="desc">문답법을 통해 스스로 무지를 깨닫게 하는 철학적 대화를 실천했으며, 서양 철학의 출발점으로 평가받습니다.</p>
-      </article>
+  <div class="mx-auto flex min-h-screen w-full max-w-md flex-col bg-white shadow-sm">
 
-      <article class="card">
-        <h2>플라톤</h2>
-        <p class="era">B.C. 428 &ndash; B.C. 348, 고대 그리스</p>
-        <p class="quote">"이데아는 참된 실재이며, 감각 세계는 그 그림자에 불과하다."</p>
-        <p class="desc">소크라테스의 제자로 이데아론을 정립했고, 아카데메이아를 세워 서양 철학과 정치 사상에 큰 영향을 남겼습니다.</p>
-      </article>
+    <header class="flex items-center justify-between border-b border-avocado-100 px-5 py-4">
+      <button id="backBtn" class="invisible flex h-8 w-8 items-center justify-center rounded-full text-avocado-600 hover:bg-avocado-50" aria-label="뒤로 가기">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h1 class="text-base font-semibold tracking-tight">Avomatic</h1>
+      <div class="h-8 w-8"></div>
+    </header>
 
-      <article class="card">
-        <h2>아리스토텔레스</h2>
-        <p class="era">B.C. 384 &ndash; B.C. 322, 고대 그리스</p>
-        <p class="quote">"인간은 본성적으로 정치적 동물이다."</p>
-        <p class="desc">논리학, 형이상학, 윤리학, 자연학 등 거의 모든 학문 분야의 기초를 세운 서양 학문의 아버지입니다.</p>
-      </article>
+    <main class="flex flex-1 flex-col">
 
-      <article class="card">
-        <h2>르네 데카르트</h2>
-        <p class="era">1596 &ndash; 1650, 프랑스</p>
-        <p class="quote">"나는 생각한다, 고로 존재한다."</p>
-        <p class="desc">방법적 회의를 통해 확실한 지식의 토대를 탐구했으며, 근대 철학과 합리주의의 창시자로 불립니다.</p>
-      </article>
+      <section id="view-upload" class="flex flex-1 flex-col px-5 py-6">
+        <p class="text-sm text-avocado-600">사진 한 장으로 지금 상태를 확인하세요</p>
+        <h2 class="mt-1 text-xl font-bold leading-snug">아보카도, 언제 먹으면<br/>딱 좋을까요?</h2>
 
-      <article class="card">
-        <h2>임마누엘 칸트</h2>
-        <p class="era">1724 &ndash; 1804, 프로이센</p>
-        <p class="quote">"네 의지의 준칙이 보편적 법칙이 되도록 행위하라."</p>
-        <p class="desc">경험론과 합리론을 종합한 비판 철학을 통해 인식론과 윤리학에 혁명적인 전환을 가져왔습니다.</p>
-      </article>
+        <label for="photoInput" id="dropZone" class="mt-6 flex flex-1 min-h-[280px] cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-avocado-200 bg-avocado-50 px-6 text-center transition hover:border-avocado-400 hover:bg-avocado-100">
+          <img id="previewImg" src="" alt="" class="hidden max-h-64 w-full rounded-xl object-cover" />
+          <div id="dropZoneEmpty" class="flex flex-col items-center gap-3">
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-avocado-100 text-avocado-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <p class="text-sm font-medium text-avocado-700">사진을 선택하거나 촬영하세요</p>
+            <p class="text-xs text-avocado-400">JPG, PNG · 최대 10MB</p>
+          </div>
+        </label>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" class="hidden" />
 
-      <article class="card">
-        <h2>프리드리히 니체</h2>
-        <p class="era">1844 &ndash; 1900, 독일</p>
-        <p class="quote">"신은 죽었다."</p>
-        <p class="desc">기존의 도덕과 가치 체계를 근본적으로 비판하며 초인 사상과 영원 회귀 개념을 제시했습니다.</p>
-      </article>
-    </section>
-  </main>
+        <p class="mt-4 text-xs leading-relaxed text-avocado-400">
+          학습 데이터는 스튜디오 조명 기준으로 만들어졌어요. 실제 조명에 따라 결과에 오차가 있을 수 있습니다.
+        </p>
 
-  <footer>
-    <p>&copy; 2026 Philosophy-Idea. 철학에 대해 사색하자.</p>
-  </footer>
+        <button id="toStorageBtn" disabled class="mt-6 w-full rounded-xl bg-avocado-600 px-4 py-3.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:bg-avocado-200">
+          숙성도 판별하기
+        </button>
+      </section>
+
+      <section id="view-storage" class="hidden flex-1 flex-col px-5 py-6">
+        <p class="text-sm text-avocado-600">한 가지만 더 알려주세요</p>
+        <h2 class="mt-1 text-xl font-bold leading-snug">지금 어떻게<br/>보관하고 계신가요?</h2>
+
+        <div id="storageOptions" class="mt-6 flex flex-col gap-3">
+          <button type="button" data-storage="fridge" data-factor="2.3" class="storage-option flex items-center justify-between rounded-xl border-2 border-avocado-200 px-4 py-3.5 text-left transition">
+            <span>
+              <span class="block text-sm font-semibold">냉장 보관</span>
+              <span class="block text-xs text-avocado-500">약 10°C · 숙성이 느려요</span>
+            </span>
+            <span class="check hidden h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-avocado-600 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+          </button>
+
+          <button type="button" data-storage="room" data-factor="1" class="storage-option flex items-center justify-between rounded-xl border-2 border-avocado-600 bg-avocado-50 px-4 py-3.5 text-left transition">
+            <span>
+              <span class="block text-sm font-semibold">실온 보관</span>
+              <span class="block text-xs text-avocado-500">약 20°C · 기본 숙성 속도</span>
+            </span>
+            <span class="check flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-avocado-600 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+          </button>
+
+          <button type="button" data-storage="warm" data-factor="0.7" class="storage-option flex items-center justify-between rounded-xl border-2 border-avocado-200 px-4 py-3.5 text-left transition">
+            <span>
+              <span class="block text-sm font-semibold">상온 보관 (따뜻한 곳)</span>
+              <span class="block text-xs text-avocado-500">약 25°C 이상 · 숙성이 빨라요</span>
+            </span>
+            <span class="check hidden h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-avocado-600 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+          </button>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <button id="toResultBtn" class="mt-6 w-full rounded-xl bg-avocado-600 px-4 py-3.5 text-sm font-semibold text-white transition">
+          결과 확인하기
+        </button>
+      </section>
+
+      <section id="view-result" class="hidden flex-1 flex-col px-5 py-6">
+        <div id="warningBanner" class="hidden mb-4 flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-xs text-amber-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mt-0.5 h-4 w-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>신뢰도가 낮아요. 조명이 밝은 곳에서 다시 찍어보시면 더 정확해요.</span>
+        </div>
+
+        <div class="flex items-center gap-4 rounded-2xl bg-avocado-50 p-4">
+          <img id="resultImg" src="" alt="" class="h-20 w-20 flex-shrink-0 rounded-xl object-cover" />
+          <div class="min-w-0 flex-1">
+            <span id="stageBadge" class="inline-block rounded-full px-2.5 py-1 text-xs font-semibold"></span>
+            <p id="stageName" class="mt-1.5 text-lg font-bold"></p>
+            <div class="mt-1.5 flex items-center gap-1.5">
+              <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-avocado-200">
+                <div id="confidenceBar" class="h-full rounded-full bg-avocado-600"></div>
+              </div>
+              <span id="confidenceText" class="flex-shrink-0 text-xs font-medium text-avocado-500"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="timingCard" class="mt-4 rounded-2xl border-2 px-4 py-4 text-center">
+          <p class="text-xs font-medium uppercase tracking-wide opacity-70">언제 드시면 좋을까요</p>
+          <p id="timingText" class="mt-1 text-2xl font-bold"></p>
+        </div>
+
+        <div class="mt-4 rounded-2xl bg-avocado-50 p-4">
+          <p class="text-xs font-semibold text-avocado-600">보관 조언</p>
+          <p id="storageAdvice" class="mt-1.5 text-sm leading-relaxed text-avocado-800"></p>
+        </div>
+
+        <div class="mt-4">
+          <p class="text-xs font-semibold text-avocado-600">추천 용도</p>
+          <div id="usageTags" class="mt-2 flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="flex-1"></div>
+
+        <div class="mt-6 flex gap-3">
+          <button id="retakeBtn" class="flex-1 rounded-xl border-2 border-avocado-200 px-4 py-3.5 text-sm font-semibold text-avocado-700 transition hover:bg-avocado-50">
+            다시 촬영
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
 </body>
 </html>
