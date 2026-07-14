@@ -45,6 +45,7 @@ const state = {
   photoDataUrl: null,
   storageFactor: 1,
   storageLabel: '실온 보관',
+  storageType: 'room',
 };
 
 const $ = (id) => document.getElementById(id);
@@ -98,6 +99,7 @@ document.querySelectorAll('.storage-option').forEach((btn) => {
     btn.querySelector('.check').classList.remove('hidden');
     state.storageFactor = parseFloat(btn.dataset.factor);
     state.storageLabel = btn.querySelector('span > span').textContent;
+    state.storageType = btn.dataset.storage;
   });
 });
 
@@ -128,6 +130,17 @@ $('toResultBtn').addEventListener('click', () => {
   $('warningBanner').classList.toggle('hidden', confidence >= 70);
 
   showView('view-result');
+
+  fetch('/api/judgments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      stage: stage.key,
+      confidence,
+      storageType: state.storageType,
+      remainingLabel: timing.label,
+    }),
+  }).catch((err) => console.error('결과 저장 실패', err));
 });
 
 $('retakeBtn').addEventListener('click', () => {

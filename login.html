@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>로그인 — Avomatic</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          avocado: {
+            50: '#f2f7e9', 100: '#e0ecc9', 200: '#c8dd9d',
+            300: '#a8c968', 400: '#8bb542', 500: '#6f9a2e',
+            600: '#557a22', 700: '#425f1c', 800: '#364c1a', 900: '#2f4118'
+          }
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-avocado-50 min-h-screen text-avocado-900 antialiased">
+
+  <div class="mx-auto flex min-h-screen w-full max-w-md flex-col bg-white shadow-sm">
+
+    <header class="flex items-center justify-center border-b border-avocado-100 px-5 py-4">
+      <h1 class="text-base font-semibold tracking-tight">Avomatic</h1>
+    </header>
+
+    <main class="flex flex-1 flex-col px-5 py-8">
+      <h2 class="text-xl font-bold leading-snug">로그인하고<br/>기록을 이어가세요</h2>
+
+      <form id="loginForm" class="mt-6 flex flex-col gap-3">
+        <div>
+          <label class="mb-1 block text-xs font-semibold text-avocado-600">이메일</label>
+          <input type="email" id="email" required placeholder="you@example.com"
+            class="w-full rounded-xl border-2 border-avocado-200 px-4 py-3 text-sm outline-none transition focus:border-avocado-500" />
+        </div>
+        <div>
+          <label class="mb-1 block text-xs font-semibold text-avocado-600">비밀번호</label>
+          <input type="password" id="password" required placeholder="8자 이상"
+            class="w-full rounded-xl border-2 border-avocado-200 px-4 py-3 text-sm outline-none transition focus:border-avocado-500" />
+        </div>
+
+        <p id="errorMsg" class="hidden text-xs font-medium text-red-600"></p>
+
+        <button type="submit" class="mt-2 w-full rounded-xl bg-avocado-600 px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-avocado-700">
+          로그인
+        </button>
+      </form>
+
+      <p class="mt-4 text-center text-sm text-avocado-500">
+        계정이 없으신가요?
+        <a href="/signup" class="font-semibold text-avocado-700 underline">회원가입</a>
+      </p>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.classList.add('hidden');
+
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        errorMsg.textContent = data.error || '로그인에 실패했어요.';
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+      window.location.href = '/';
+    });
+  </script>
+</body>
+</html>
