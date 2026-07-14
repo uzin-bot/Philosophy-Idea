@@ -90,7 +90,8 @@ def signup():
 
     session["user_id"] = user_id
     session["email"] = email
-    return jsonify({"id": user_id, "email": email}), 201
+    session["name"] = name
+    return jsonify({"id": user_id, "email": email, "name": name}), 201
 
 
 @app.post("/api/login")
@@ -100,7 +101,7 @@ def login():
     password = data.get("password") or ""
 
     with get_conn() as conn, conn.cursor() as cur:
-        cur.execute("SELECT id, password_hash FROM users WHERE email = %s;", (email,))
+        cur.execute("SELECT id, password_hash, name FROM users WHERE email = %s;", (email,))
         row = cur.fetchone()
 
     if not row or not row[1] or not check_password_hash(row[1], password):
@@ -108,7 +109,8 @@ def login():
 
     session["user_id"] = row[0]
     session["email"] = email
-    return jsonify({"id": row[0], "email": email})
+    session["name"] = row[2] or ""
+    return jsonify({"id": row[0], "email": email, "name": row[2] or ""})
 
 
 @app.post("/api/logout")
@@ -121,7 +123,9 @@ def logout():
 def me():
     if "user_id" not in session:
         return jsonify({"user": None})
-    return jsonify({"user": {"id": session["user_id"], "email": session["email"]}})
+    return jsonify(
+        {"user": {"id": session["user_id"], "email": session["email"], "name": session.get("name") or ""}}
+    )
 
 
 @app.get("/api/health")

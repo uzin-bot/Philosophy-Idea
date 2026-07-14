@@ -160,3 +160,18 @@ $('backBtn').addEventListener('click', () => {
   if (current === 'view-result') showView('view-storage');
   else if (current === 'view-storage') showView('view-upload');
 });
+
+$('logoutBtn').addEventListener('click', async () => {
+  await fetch('/api/logout', { method: 'POST' });
+  window.location.reload();
+});
+
+fetch('/api/me')
+  .then((r) => r.json())
+  .then(({ user }) => {
+    if (!user) return;
+    const displayName = user.name || user.email.split('@')[0];
+    $('welcomeText').textContent = `${displayName}님 환영해요~ 저희 아보카도 맛있게 먹어보시죠? 드가를 드가~`;
+    $('welcomeBanner').classList.remove('hidden');
+    $('loginLink').classList.add('hidden');
+  });
